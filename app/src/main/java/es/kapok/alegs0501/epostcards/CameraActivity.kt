@@ -1,18 +1,20 @@
 package es.kapok.alegs0501.epostcards
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Camera
+import android.hardware.camera2.CameraDevice
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.WindowManager
 import android.widget.FrameLayout
 import es.kapok.alegs0501.epostcards.models.CameraPreview
 import android.view.Display
-import android.widget.Button
 import android.widget.ImageButton
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
@@ -42,6 +44,12 @@ class CameraActivity : AppCompatActivity() {
             val fos = FileOutputStream(pictureFile)
             fos.write(data)
             fos.close()
+            //Release camera when pic is saved
+            releaseCamera()
+            //Removes all views from preview to prevent app freeze
+            camera_preview.removeAllViews()
+            //reload camera preview
+            preview()
         } catch (e: FileNotFoundException) {
             Log.d("TAG", "File not found: ${e.message}")
         } catch (e: IOException) {
@@ -58,39 +66,51 @@ class CameraActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
        if (checkCameraHardware(this)){
-           //create an instance of camera
-           mCamera = getCameraInstance()
-           adjustPreview()
 
-           mPreview = mCamera?.let {
-               //Create a preview view
-               CameraPreview(this,it)
-           }
-
-           //Set Preview view as rhe content of activity
-           mPreview?.also {
-               val preview: FrameLayout = findViewById(R.id.camera_preview)
-               preview.addView(it)
-           }
+            preview()
 
            /** take picture action**/
            val captureButton: ImageButton = findViewById(R.id.button_capture)
            captureButton.setOnClickListener {
                // get an image from the camera
                mCamera?.takePicture(null, null, mPicture)
+
            }
        }
 
     }
 
+
+
     override fun onPause() {
         super.onPause()
-        releaseCamera() // release the camera immediately on pause event
+        releaseCamera()
     }
 
     private fun releaseCamera() {
-        mCamera?.release() // release the camera for other applications
-        mCamera = null
+       mCamera?.apply {
+           mCamera?.stopPreview()
+           mCamera?.release()
+           mCamera = null
+       }
+    }
+
+    /**Create a camera instance and preview picture*/
+    private fun preview(){
+        //create an instance of camera
+        mCamera = getCameraInstance()
+        adjustPreview()
+
+        mPreview = mCamera?.let {
+            //Create a preview view
+            CameraPreview(this,it)
+        }
+
+        //Set Preview view as rhe content of activity
+        mPreview?.also {
+            val preview: FrameLayout = findViewById(R.id.camera_preview)
+            preview.addView(it)
+        }
     }
 
 
