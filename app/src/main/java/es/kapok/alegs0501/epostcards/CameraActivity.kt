@@ -84,7 +84,13 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        camera_preview.removeAllViews()
         releaseCamera()
+    }
+
+    override fun onRestart(){
+        super.onRestart()
+        preview()
     }
 
     private fun releaseCamera() {
