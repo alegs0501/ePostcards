@@ -4,18 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Camera
-import android.hardware.camera2.CameraDevice
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.WindowManager
 import android.widget.FrameLayout
 import es.kapok.alegs0501.epostcards.models.CameraPreview
 import android.view.Display
 import android.widget.ImageButton
+import es.kapok.alegs0501.epostcards.models.PictureReference
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -50,6 +49,14 @@ class CameraActivity : AppCompatActivity() {
             camera_preview.removeAllViews()
             //reload camera preview
             preview()
+
+            //Putting picture byte array in singleton
+            PictureReference.data = data
+
+            //Launching Preview Activity
+            val intent: Intent = Intent(this, PreviewActivity::class.java)
+            startActivity(intent)
+
         } catch (e: FileNotFoundException) {
             Log.d("TAG", "File not found: ${e.message}")
         } catch (e: IOException) {
