@@ -112,6 +112,17 @@ class CameraActivity : AppCompatActivity() {
     private fun preview(){
         //create an instance of camera
         mCamera = getCameraInstance()
+
+        //Camera feature
+        mCamera?.apply {
+            parameters?.also {
+                it.flashMode = Camera.Parameters.FLASH_MODE_ON
+                it.focusMode = Camera.Parameters.FOCUS_MODE_AUTO
+                it.colorEffect = Camera.Parameters.EFFECT_SEPIA
+                parameters = it
+            }
+        }
+
         adjustPreview()
 
         mPreview = mCamera?.let {
