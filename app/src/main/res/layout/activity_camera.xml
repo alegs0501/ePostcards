@@ -38,4 +38,74 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineh"
         app:srcCompat="@drawable/shutter" />
 
+    <ImageButton
+        android:id="@+id/flash_selected"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#00000000"
+        android:contentDescription="@string/flash_selected"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/flash" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/flash_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="#c7000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/flash_selected"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/flash"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:contentDescription="@string/flash"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/flash" />
+
+        <ImageButton
+            android:id="@+id/flash_auto"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:contentDescription="@string/flash_auto"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/flash"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/flash_auto" />
+
+        <ImageButton
+            android:id="@+id/flash_none"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:contentDescription="@string/flash_none"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/flash_auto"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/flash_none" />
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>

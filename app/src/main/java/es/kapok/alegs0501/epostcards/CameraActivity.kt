@@ -13,7 +13,9 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import es.kapok.alegs0501.epostcards.models.CameraPreview
 import android.view.Display
+import android.view.View
 import android.widget.ImageButton
+import es.kapok.alegs0501.epostcards.models.CameraPreferences
 import es.kapok.alegs0501.epostcards.models.PictureReference
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
@@ -22,6 +24,12 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import android.view.animation.LayoutAnimationController
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
+import android.view.animation.AnimationSet
+
+
 
 
 class CameraActivity : AppCompatActivity() {
@@ -31,6 +39,9 @@ class CameraActivity : AppCompatActivity() {
 
     private val MEDIA_TYPE_IMAGE = 1
     private val MEDIA_TYPE_VIDEO = 2
+
+    //Flash bar state
+    private var hideBar = true
 
 
     private val mPicture = Camera.PictureCallback { data, _ ->
@@ -52,6 +63,7 @@ class CameraActivity : AppCompatActivity() {
 
             //Putting picture byte array in singleton
             PictureReference.data = data
+            PictureReference.file = pictureFile
 
             //Launching Preview Activity
             val intent: Intent = Intent(this, PreviewActivity::class.java)
@@ -72,9 +84,15 @@ class CameraActivity : AppCompatActivity() {
         //Hiding status bar
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
+        //Hiding flash selectors
+        flash_container.visibility = View.GONE
+
        if (checkCameraHardware(this)){
 
+           //Starting camera preview
             preview()
+           //Setting flash selected image
+            setFlashImage()
 
            /** take picture action**/
            val captureButton: ImageButton = findViewById(R.id.button_capture)
@@ -83,6 +101,26 @@ class CameraActivity : AppCompatActivity() {
                mCamera?.takePicture(null, null, mPicture)
 
            }
+
+           /**show/hide flash bar*/
+           flash_selected.setOnClickListener{
+               showFlashBar()
+           }
+
+           /**flash mode selection*/
+           flash.setOnClickListener{
+               setFlashMode(1)
+               setFlashImage()
+           }
+           flash_auto.setOnClickListener{
+               setFlashMode(2)
+               setFlashImage()
+           }
+           flash_none.setOnClickListener{
+               setFlashMode(3)
+               setFlashImage()
+           }
+
        }
 
     }
@@ -100,6 +138,7 @@ class CameraActivity : AppCompatActivity() {
         preview()
     }
 
+    /**Release camera*/
     private fun releaseCamera() {
        mCamera?.apply {
            mCamera?.stopPreview()
@@ -116,9 +155,9 @@ class CameraActivity : AppCompatActivity() {
         //Camera feature
         mCamera?.apply {
             parameters?.also {
-                it.flashMode = Camera.Parameters.FLASH_MODE_ON
-                it.focusMode = Camera.Parameters.FOCUS_MODE_AUTO
-                it.colorEffect = Camera.Parameters.EFFECT_SEPIA
+                it.flashMode = CameraPreferences.flashMode
+                it.focusMode = CameraPreferences.focusMode
+                it.colorEffect = CameraPreferences.colorEffect
                 parameters = it
             }
         }
@@ -212,7 +251,84 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    /**Animate flash panel selector*/
+    private fun animatePanel(showing: Boolean) {
+        val set = AnimationSet(true)
+        var animation: Animation? = null
+        if (showing) {
+            //Animate from right to left
+            animation = TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f)
+        } else {    //Animate left  to right
+            animation = TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f)
+        }
 
+        animation.duration = 500
+        set.addAnimation(animation)
+        val controller = LayoutAnimationController(set, 0.25f)
+
+        flash_container.layoutAnimation = controller
+        flash_container .startAnimation(animation)
+    }
+
+    /**Flash bar show/hide*/
+    private fun showFlashBar(){
+        animatePanel(hideBar)
+        if (hideBar){
+            flash_container.visibility = View.VISIBLE
+        }else {
+            flash_container.visibility = View.GONE
+        }
+        hideBar = !hideBar
+    }
+
+    /**Change Camera parameters*/
+    private fun changeCameraParameters(){
+        mCamera?.apply {
+            parameters?.also {
+                it.flashMode = CameraPreferences.flashMode
+                it.focusMode = CameraPreferences.focusMode
+                it.colorEffect = CameraPreferences.colorEffect
+                parameters = it
+            }
+        }
+    }
+
+    /**Set flash mode*/
+    private fun setFlashMode(mode: Int){
+        when (mode){
+            1 -> {
+                CameraPreferences.flashMode = Camera.Parameters.FLASH_MODE_ON
+                changeCameraParameters()
+                showFlashBar()
+            }
+            2 -> {
+                CameraPreferences.flashMode = Camera.Parameters.FLASH_MODE_AUTO
+                changeCameraParameters()
+                showFlashBar()
+            }
+            3 -> {
+                CameraPreferences.flashMode = Camera.Parameters.FLASH_MODE_OFF
+                changeCameraParameters()
+                showFlashBar()
+            }
+            else -> {
+                CameraPreferences.flashMode = Camera.Parameters.FLASH_MODE_ON
+                changeCameraParameters()
+                showFlashBar()
+            }
+        }
+    }
+
+    /**Image flash selected*/
+    private fun setFlashImage(){
+
+        when(CameraPreferences.flashMode){
+            Camera.Parameters.FLASH_MODE_ON -> flash_selected.setImageResource(R.drawable.flash)
+            Camera.Parameters.FLASH_MODE_AUTO -> flash_selected.setImageResource(R.drawable.flash_auto)
+            Camera.Parameters.FLASH_MODE_OFF -> flash_selected.setImageResource(R.drawable.flash_none)
+            else -> flash_selected.setImageResource(R.drawable.flash)
+        }
+    }
 
 
 
