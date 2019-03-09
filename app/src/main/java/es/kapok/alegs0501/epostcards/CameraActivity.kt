@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Camera
 import android.net.Uri
+import android.opengl.Visibility
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
@@ -91,8 +92,12 @@ class CameraActivity : AppCompatActivity() {
 
            //Starting camera preview
             preview()
+           
            //Setting flash selected image
-            setFlashImage()
+           if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)){
+               setFlashImage()
+           }else flash.visibility = View.GONE
+
 
            /** take picture action**/
            val captureButton: ImageButton = findViewById(R.id.button_capture)

@@ -7,7 +7,7 @@ class CameraPreferences {
 
     //Singleton to store camera preferences
     companion object {
-        var flashMode = Camera.Parameters.FLASH_MODE_ON
+        var flashMode = Camera.Parameters.FLASH_MODE_OFF
         var focusMode = Camera.Parameters.FOCUS_MODE_AUTO
         var colorEffect = Camera.Parameters.EFFECT_NONE
     }
