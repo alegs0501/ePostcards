@@ -15,12 +15,9 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.WindowManager
 import android.widget.FrameLayout
-import es.kapok.alegs0501.epostcards.models.CameraPreview
 import android.view.Display
 import android.view.View
 import android.widget.ImageButton
-import es.kapok.alegs0501.epostcards.models.CameraPreferences
-import es.kapok.alegs0501.epostcards.models.PictureReference
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -33,7 +30,7 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.view.animation.AnimationSet
 import es.kapok.alegs0501.epostcards.data.FilterListAdapter
-import es.kapok.alegs0501.epostcards.models.Filter
+import es.kapok.alegs0501.epostcards.models.*
 import kotlin.collections.ArrayList
 
 
@@ -107,20 +104,31 @@ class CameraActivity : AppCompatActivity() {
                setFlashImage()
            }else flash.visibility = View.GONE
 
-
+            //Adapter and layout for filter
            filterList = ArrayList()
            layoutManager = LinearLayoutManager(this)
            adapter = FilterListAdapter(filterList!!, this)
 
+
            myRecyclerView.layoutManager = LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
            myRecyclerView.adapter = adapter
 
-           for (i in 0..7){
-               var filter = Filter()
-               filter.cam_filter = i.toString()
-               filter.name_filter = i.toString()
-               filterList?.add(filter)
+           //Supported camera filters
+           var availableFilters = mCamera?.parameters!!.supportedColorEffects
+
+           //if exists filters
+           if (availableFilters.size > 0){
+               for (i:Int in 0 until availableFilters.size){
+                   //select index from filter
+                   val index = findFilter(AllFilters.list, availableFilters[i])
+                   //if filter is available
+                   if (index != -1 && findFilter(filterList!!, availableFilters[i]) == -1){
+                       //add filter to use
+                       filterList?.add(AllFilters.list[index])
+                   }
+               }
            }
+
             adapter!!.notifyDataSetChanged()
 
            /** take picture action**/
@@ -357,6 +365,22 @@ class CameraActivity : AppCompatActivity() {
             Camera.Parameters.FLASH_MODE_OFF -> flash_selected.setImageResource(R.drawable.flash_none)
             else -> flash_selected.setImageResource(R.drawable.flash)
         }
+    }
+
+    /**Finding a filter in a list*/
+    private fun findFilter(list: ArrayList<Filter>, name: String): Int{
+        var index = -1
+        var counter = 0
+        var found = false
+
+        while (counter < list.size && !found){
+            if (list[counter].name_filter == name){
+                found = true
+                index = counter
+            }
+            counter ++
+        }
+        return index
     }
 
 
