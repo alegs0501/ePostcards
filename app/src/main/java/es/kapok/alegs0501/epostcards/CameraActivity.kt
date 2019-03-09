@@ -9,6 +9,9 @@ import android.opengl.Visibility
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.OrientationHelper
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.WindowManager
 import android.widget.FrameLayout
@@ -29,8 +32,9 @@ import android.view.animation.LayoutAnimationController
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.view.animation.AnimationSet
-
-
+import es.kapok.alegs0501.epostcards.data.FilterListAdapter
+import es.kapok.alegs0501.epostcards.models.Filter
+import kotlin.collections.ArrayList
 
 
 class CameraActivity : AppCompatActivity() {
@@ -43,6 +47,11 @@ class CameraActivity : AppCompatActivity() {
 
     //Flash bar state
     private var hideBar = true
+
+    //Filters
+    private var adapter: FilterListAdapter? = null
+    private var filterList: ArrayList<Filter>? = null
+    private var layoutManager: RecyclerView.LayoutManager? = null
 
 
     private val mPicture = Camera.PictureCallback { data, _ ->
@@ -92,12 +101,27 @@ class CameraActivity : AppCompatActivity() {
 
            //Starting camera preview
             preview()
-           
+
            //Setting flash selected image
            if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)){
                setFlashImage()
            }else flash.visibility = View.GONE
 
+
+           filterList = ArrayList()
+           layoutManager = LinearLayoutManager(this)
+           adapter = FilterListAdapter(filterList!!, this)
+
+           myRecyclerView.layoutManager = LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
+           myRecyclerView.adapter = adapter
+
+           for (i in 0..7){
+               var filter = Filter()
+               filter.cam_filter = i.toString()
+               filter.name_filter = i.toString()
+               filterList?.add(filter)
+           }
+            adapter!!.notifyDataSetChanged()
 
            /** take picture action**/
            val captureButton: ImageButton = findViewById(R.id.button_capture)

@@ -5,4 +5,5 @@
     <string name="flash">flash</string>
     <string name="flash_auto">flash_auto</string>
     <string name="flash_none">flash_none</string>
+    <string name="filter_image">filter_image</string>
 </resources>
