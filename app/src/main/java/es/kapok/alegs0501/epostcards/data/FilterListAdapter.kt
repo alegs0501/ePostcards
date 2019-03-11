@@ -7,12 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import es.kapok.alegs0501.epostcards.CameraActivity
+import es.kapok.alegs0501.epostcards.models.CameraPreferences
 import es.kapok.alegs0501.epostcards.models.Filter
 import kotlinx.android.synthetic.main.filter_card.view.*
 
 
 class FilterListAdapter(private val list:ArrayList<Filter>, private val context: Context):
                         RecyclerView.Adapter<FilterListAdapter.ViewHolder>(){
+
+    private lateinit var mListener: OnItemClickListener
+
+
+    interface OnItemClickListener{
+        fun onItemClick(position: Int)
+    }
+
+    fun setOnclickListener(listener: OnItemClickListener){
+        mListener = listener
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -26,16 +40,24 @@ class FilterListAdapter(private val list:ArrayList<Filter>, private val context:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItem(list[position])
+        holder.bindItem(list[position], mListener)
     }
 
 
+    inner class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
-    class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
-
-        fun bindItem(filter: es.kapok.alegs0501.epostcards.models.Filter){
+        fun bindItem(filter: es.kapok.alegs0501.epostcards.models.Filter, listener: OnItemClickListener){
             var name: TextView = itemView.findViewById(es.kapok.alegs0501.epostcards.R.id.filter_name)
             name.text = filter.name_filter
+
+            itemView.setOnClickListener{
+                if (listener != null){
+                    val position: Int = adapterPosition
+                    if (position != RecyclerView.NO_POSITION){
+                        listener.onItemClick(position)
+                    }
+                }
+            }
         }
     }
 

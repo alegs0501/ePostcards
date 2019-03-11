@@ -29,8 +29,11 @@ import android.view.animation.LayoutAnimationController
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.view.animation.AnimationSet
+import android.widget.AdapterView
+import android.widget.Toast
 import es.kapok.alegs0501.epostcards.data.FilterListAdapter
 import es.kapok.alegs0501.epostcards.models.*
+import kotlinx.android.synthetic.main.filter_card.*
 import kotlin.collections.ArrayList
 
 
@@ -110,6 +113,14 @@ class CameraActivity : AppCompatActivity() {
            adapter = FilterListAdapter(filterList!!, this)
 
 
+           //Card view listener
+           adapter!!.setOnclickListener(object: FilterListAdapter.OnItemClickListener{
+               override fun onItemClick(position: Int) {
+                   CameraPreferences.colorEffect = filterList!![position].name_filter!!
+                   changeCameraParameters()
+               }
+           })
+
            myRecyclerView.layoutManager = LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
            myRecyclerView.adapter = adapter
 
@@ -130,6 +141,8 @@ class CameraActivity : AppCompatActivity() {
            }
 
             adapter!!.notifyDataSetChanged()
+
+
 
            /** take picture action**/
            val captureButton: ImageButton = findViewById(R.id.button_capture)
@@ -157,7 +170,6 @@ class CameraActivity : AppCompatActivity() {
                setFlashMode(3)
                setFlashImage()
            }
-
        }
 
     }
@@ -319,7 +331,7 @@ class CameraActivity : AppCompatActivity() {
     }
 
     /**Change Camera parameters*/
-    private fun changeCameraParameters(){
+    fun changeCameraParameters(){
         mCamera?.apply {
             parameters?.also {
                 it.flashMode = CameraPreferences.flashMode

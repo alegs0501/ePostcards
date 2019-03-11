@@ -1,6 +1,7 @@
 package es.kapok.alegs0501.epostcards.models
 
 import android.hardware.Camera
+import java.util.*
 
 class CameraPreferences {
 
