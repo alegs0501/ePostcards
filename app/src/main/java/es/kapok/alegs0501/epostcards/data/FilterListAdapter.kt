@@ -1,6 +1,7 @@
 package es.kapok.alegs0501.epostcards.data
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.cardview.R
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

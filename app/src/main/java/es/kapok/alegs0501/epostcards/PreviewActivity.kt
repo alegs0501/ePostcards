@@ -1,5 +1,6 @@
 package es.kapok.alegs0501.epostcards
 
+import android.content.Intent
 import android.graphics.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -24,11 +25,17 @@ class PreviewActivity : AppCompatActivity() {
         //Encoding byte array to bitmap
         val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
         //Setting bitmap on imageview
-        imageView.setImageBitmap(getGrayscale(bitmap))
+        imageView.setImageBitmap(bitmap)
+
+        next_button.setOnClickListener{
+            val intent = Intent(this, BackListActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 
 
+    //Matrix color filter
     private fun getGrayscale(src: Bitmap): Bitmap {
 
         //Custom color matrix to convert to GrayScale

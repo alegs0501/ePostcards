@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">ePostcards</string>
     <string name="image_shutter_desc">image shutter</string>
-    <string name="flash_selected" >selected flash</string>
+    <string name="flash_selected">selected flash</string>
     <string name="flash">flash</string>
     <string name="flash_auto">flash_auto</string>
     <string name="flash_none">flash_none</string>
     <string name="filter_image">filter_image</string>
+    <string name="image_holder">image_holder</string>
+    <string name="next">next</string>
 </resources>
