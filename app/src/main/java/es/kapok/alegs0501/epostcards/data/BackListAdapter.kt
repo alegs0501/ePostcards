@@ -1,11 +1,14 @@
 package es.kapok.alegs0501.epostcards.data
 
 import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import es.kapok.alegs0501.epostcards.EditBackActivity
 import es.kapok.alegs0501.epostcards.R
 
 
@@ -32,6 +35,12 @@ class BackListAdapter(private val list:ArrayList<Int>, private val context: Cont
         fun bindItem(back: Int) {
             var image: ImageView = itemView.findViewById(R.id.back_image)
             image.setImageResource(back)
+
+            itemView.setOnClickListener{
+                val intent = Intent(itemView.context, EditBackActivity::class.java)
+                intent.putExtra("back_image", back)
+                ContextCompat.startActivity(itemView.context, intent, null)
+            }
 
         }
     }
