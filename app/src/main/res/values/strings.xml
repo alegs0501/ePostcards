@@ -8,4 +8,6 @@
     <string name="filter_image">filter_image</string>
     <string name="image_holder">image_holder</string>
     <string name="next">next</string>
+    <string name="sample_text">SAMPLE TEXT</string>
+    <string name="edit_text">Edit text</string>
 </resources>
