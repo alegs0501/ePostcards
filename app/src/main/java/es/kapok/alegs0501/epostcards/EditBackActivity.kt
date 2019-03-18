@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_edit_back.*
 
 class EditBackActivity : AppCompatActivity() {
 
-    var hiddenPanel = true
+    private var hiddenPanel = true
     var red = 0
     var green = 0
     var blue = 0

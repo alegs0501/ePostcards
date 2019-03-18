@@ -48,6 +48,9 @@ class CameraActivity : AppCompatActivity() {
     //Flash bar state
     private var hideBar = true
 
+    //Filters bar state
+    private var hideFilterBar = false
+
     //Filters
     private var adapter: FilterListAdapter? = null
     private var filterList: ArrayList<Filter>? = null
@@ -93,6 +96,9 @@ class CameraActivity : AppCompatActivity() {
 
         //Hiding status bar
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+        //Hiding filters bar
+        myRecyclerView.visibility = View.GONE
 
         //Hiding flash selectors
         flash_container.visibility = View.GONE
@@ -155,6 +161,11 @@ class CameraActivity : AppCompatActivity() {
            /**show/hide flash bar*/
            flash_selected.setOnClickListener{
                showFlashBar()
+           }
+
+           /**show/hide filters bar*/
+           filter_show_button.setOnClickListener{
+               showFilterBar()
            }
 
            /**flash mode selection*/
@@ -327,6 +338,35 @@ class CameraActivity : AppCompatActivity() {
             flash_container.visibility = View.GONE
         }
         hideBar = !hideBar
+    }
+
+    /**Animate filters bar*/
+    private fun animateFilterPanel(showing: Boolean) {
+        val set = AnimationSet(true)
+        var animation: Animation = if (showing) {
+            //Animate from right to left
+            TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f)
+        } else {    //Animate left  to right
+            TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f)
+        }
+
+        animation.duration = 500
+        set.addAnimation(animation)
+        val controller = LayoutAnimationController(set, 0.25f)
+
+        myRecyclerView.layoutAnimation = controller
+        myRecyclerView.startAnimation(animation)
+    }
+
+    /**Flash bar show/hide*/
+    private fun showFilterBar(){
+        animateFilterPanel(hideFilterBar)
+        if (hideFilterBar){
+            myRecyclerView.visibility = View.VISIBLE
+        }else {
+            myRecyclerView.visibility = View.GONE
+        }
+        hideFilterBar = !hideFilterBar
     }
 
     /**Change Camera parameters*/
