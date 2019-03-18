@@ -10,4 +10,6 @@
     <string name="next">next</string>
     <string name="sample_text">SAMPLE TEXT</string>
     <string name="edit_text">Edit text</string>
+    <string name="edit_poscard_text">Edit postcard text</string>
+    <string name="info_image">info_image</string>
 </resources>
