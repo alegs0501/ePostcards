@@ -16,7 +16,9 @@ import android.view.animation.AnimationSet
 import android.view.animation.LayoutAnimationController
 import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
+import es.kapok.alegs0501.epostcards.dao.PostcardDBAdapter
 import es.kapok.alegs0501.epostcards.models.PictureReference
+import es.kapok.alegs0501.epostcards.models.Postcard
 import kotlinx.android.synthetic.main.activity_camera.*
 import kotlinx.android.synthetic.main.activity_edit_back.*
 import java.io.ByteArrayOutputStream
@@ -172,14 +174,18 @@ class EditBackActivity : AppCompatActivity() {
         })
 
 
+        //Saving postcard
         make_canvas_button.setOnClickListener{
             val bitmap = writeOver()
             var byteArrayOS = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS)
 
-            PictureReference.data = byteArrayOS.toByteArray()
+            val postcard = Postcard(PictureReference.data, byteArrayOS.toByteArray())
 
-            val intent = Intent(this, PreviewActivity::class.java)
+            val mDBAdapter = PostcardDBAdapter(this)
+            mDBAdapter.insertPostcard(postcard.front, postcard.back)
+
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
@@ -206,6 +212,7 @@ class EditBackActivity : AppCompatActivity() {
     /**Write text over image*/
     private fun writeOver():Bitmap{
 
+        //Creating canvas
         back_image_container.buildDrawingCache()
         val background = back_image_container.drawingCache
         val bitmap = Bitmap.createBitmap(background)
@@ -213,16 +220,19 @@ class EditBackActivity : AppCompatActivity() {
 
         if (sample_text.text.toString() != ""){
 
+            //drawing background on bitmap
             canvas.drawBitmap(background, 0f, 0f, null)
             /**var paintText = Paint(Paint.ANTI_ALIAS_FLAG)
             paintText.color = sample_text.currentTextColor
             paintText.textSize = sample_text.textSize
             canvas.drawText(sample_text.text.toString(), sample_text.x, sample_text.y + paintText.textSize, paintText)*/
 
+            //Converting text to bitmap
             sample_text.isCursorVisible = false
             sample_text.buildDrawingCache()
             val textBitmap = Bitmap.createBitmap(sample_text.drawingCache)
 
+            //drawing text as bitmap on canvas
             canvas.drawBitmap(textBitmap, sample_text.x, sample_text.y, Paint())
         }
 

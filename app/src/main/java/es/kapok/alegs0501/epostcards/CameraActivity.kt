@@ -49,7 +49,7 @@ class CameraActivity : AppCompatActivity() {
     private var hideBar = true
 
     //Filters bar state
-    private var hideFilterBar = false
+    private var hideFilterBar = true
 
     //Filters
     private var adapter: FilterListAdapter? = null
@@ -58,7 +58,8 @@ class CameraActivity : AppCompatActivity() {
 
 
     private val mPicture = Camera.PictureCallback { data, _ ->
-        val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
+        //this block was used to saved image on SD card
+        /**val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
             Log.d("TAG", ("Error creating media file, check storage permissions"))
             return@PictureCallback
         }
@@ -86,7 +87,21 @@ class CameraActivity : AppCompatActivity() {
             Log.d("TAG", "File not found: ${e.message}")
         } catch (e: IOException) {
             Log.d("TAG", "Error accessing file: ${e.message}")
-        }
+        }*/
+
+        //Release camera when pic is saved
+        releaseCamera()
+        //Removes all views from preview to prevent app freeze
+        camera_preview.removeAllViews()
+        //reload camera preview
+        preview()
+
+        //Putting picture byte array in singleton
+        PictureReference.data = data
+
+        //Launching Preview Activity
+        val intent: Intent = Intent(this, PreviewActivity::class.java)
+        startActivity(intent)
     }
 
 
