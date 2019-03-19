@@ -1,9 +1,12 @@
 package es.kapok.alegs0501.epostcards
 
-import android.graphics.Color
+import android.content.Intent
+import android.content.res.Resources
+import android.graphics.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.text.StaticLayout
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
@@ -13,8 +16,10 @@ import android.view.animation.AnimationSet
 import android.view.animation.LayoutAnimationController
 import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
+import es.kapok.alegs0501.epostcards.models.PictureReference
 import kotlinx.android.synthetic.main.activity_camera.*
 import kotlinx.android.synthetic.main.activity_edit_back.*
+import java.io.ByteArrayOutputStream
 
 class EditBackActivity : AppCompatActivity() {
 
@@ -166,6 +171,18 @@ class EditBackActivity : AppCompatActivity() {
 
         })
 
+
+        make_canvas_button.setOnClickListener{
+            val bitmap = writeOver()
+            var byteArrayOS = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS)
+
+            PictureReference.data = byteArrayOS.toByteArray()
+
+            val intent = Intent(this, PreviewActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     /**Animate text editor panel*/
@@ -184,6 +201,32 @@ class EditBackActivity : AppCompatActivity() {
 
         editor_container.layoutAnimation = controller
         editor_container.startAnimation(animation)
+    }
+
+    /**Write text over image*/
+    private fun writeOver():Bitmap{
+
+        back_image_container.buildDrawingCache()
+        val background = back_image_container.drawingCache
+        val bitmap = Bitmap.createBitmap(background)
+        var canvas = Canvas(bitmap)
+
+        if (sample_text.text.toString() != ""){
+
+            canvas.drawBitmap(background, 0f, 0f, null)
+            /**var paintText = Paint(Paint.ANTI_ALIAS_FLAG)
+            paintText.color = sample_text.currentTextColor
+            paintText.textSize = sample_text.textSize
+            canvas.drawText(sample_text.text.toString(), sample_text.x, sample_text.y + paintText.textSize, paintText)*/
+
+            sample_text.isCursorVisible = false
+            sample_text.buildDrawingCache()
+            val textBitmap = Bitmap.createBitmap(sample_text.drawingCache)
+
+            canvas.drawBitmap(textBitmap, sample_text.x, sample_text.y, Paint())
+        }
+
+        return bitmap
     }
 
 }
