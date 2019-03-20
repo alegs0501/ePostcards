@@ -15,12 +15,14 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.LayoutAnimationController
 import android.view.animation.TranslateAnimation
+import android.widget.ImageView
 import android.widget.SeekBar
 import es.kapok.alegs0501.epostcards.dao.PostcardDBAdapter
 import es.kapok.alegs0501.epostcards.models.PictureReference
 import es.kapok.alegs0501.epostcards.models.Postcard
 import kotlinx.android.synthetic.main.activity_camera.*
 import kotlinx.android.synthetic.main.activity_edit_back.*
+import kotlinx.android.synthetic.main.activity_preview.view.*
 import java.io.ByteArrayOutputStream
 
 class EditBackActivity : AppCompatActivity() {
@@ -39,6 +41,7 @@ class EditBackActivity : AppCompatActivity() {
 
         //Setting image from extra
         back_image_container.setImageResource(intent.getIntExtra("back_image", 0))
+
 
         //Hiding editor panel
         editor_container.visibility = View.GONE
@@ -213,15 +216,18 @@ class EditBackActivity : AppCompatActivity() {
     private fun writeOver():Bitmap{
 
         //Creating canvas
-        back_image_container.buildDrawingCache()
+        back_image_container.isDrawingCacheEnabled = true
+        back_image_container.buildDrawingCache(true)
         val background = back_image_container.drawingCache
         val bitmap = Bitmap.createBitmap(background)
+        back_image_container.isDrawingCacheEnabled = false
         var canvas = Canvas(bitmap)
+
 
         if (sample_text.text.toString() != ""){
 
             //drawing background on bitmap
-            canvas.drawBitmap(background, 0f, 0f, null)
+            canvas.drawBitmap(bitmap, 0f, 0f, null)
             /**var paintText = Paint(Paint.ANTI_ALIAS_FLAG)
             paintText.color = sample_text.currentTextColor
             paintText.textSize = sample_text.textSize

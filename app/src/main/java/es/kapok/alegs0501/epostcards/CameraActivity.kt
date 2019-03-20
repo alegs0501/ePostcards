@@ -62,12 +62,12 @@ class CameraActivity : AppCompatActivity() {
         /**val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
             Log.d("TAG", ("Error creating media file, check storage permissions"))
             return@PictureCallback
-        }
+        }*/
 
         try {
-            val fos = FileOutputStream(pictureFile)
+            /**val fos = FileOutputStream(pictureFile)
             fos.write(data)
-            fos.close()
+            fos.close()*/
             //Release camera when pic is saved
             releaseCamera()
             //Removes all views from preview to prevent app freeze
@@ -76,8 +76,9 @@ class CameraActivity : AppCompatActivity() {
             preview()
 
             //Putting picture byte array in singleton
+            PictureReference.data = byteArrayOf()
             PictureReference.data = data
-            PictureReference.file = pictureFile
+            //PictureReference.file = pictureFile
 
             //Launching Preview Activity
             val intent: Intent = Intent(this, PreviewActivity::class.java)
@@ -87,21 +88,8 @@ class CameraActivity : AppCompatActivity() {
             Log.d("TAG", "File not found: ${e.message}")
         } catch (e: IOException) {
             Log.d("TAG", "Error accessing file: ${e.message}")
-        }*/
+        }
 
-        //Release camera when pic is saved
-        releaseCamera()
-        //Removes all views from preview to prevent app freeze
-        camera_preview.removeAllViews()
-        //reload camera preview
-        preview()
-
-        //Putting picture byte array in singleton
-        PictureReference.data = data
-
-        //Launching Preview Activity
-        val intent: Intent = Intent(this, PreviewActivity::class.java)
-        startActivity(intent)
     }
 
 

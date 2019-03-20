@@ -26,7 +26,7 @@ class PostcardListAdapter(private val list:ArrayList<Postcard>, private val cont
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(es.kapok.alegs0501.epostcards.R.layout.back_card,
+        val view = LayoutInflater.from(context).inflate(es.kapok.alegs0501.epostcards.R.layout.front_card,
                 parent, false)
         return ViewHolder(view)
     }
@@ -42,8 +42,8 @@ class PostcardListAdapter(private val list:ArrayList<Postcard>, private val cont
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindItem(postcard: es.kapok.alegs0501.epostcards.models.Postcard, listener: OnItemClickListener) {
-            var image: ImageView = itemView.findViewById(R.id.back_image)
+        fun bindItem(postcard: es.kapok.alegs0501.epostcards.models.Postcard, listener: OnItemClickListener?) {
+            var image: ImageView = itemView.findViewById(R.id.front_image)
             val bitmap = BitmapFactory.decodeByteArray(postcard.front, 0, postcard.front.size)
             image.setImageBitmap(bitmap)
 

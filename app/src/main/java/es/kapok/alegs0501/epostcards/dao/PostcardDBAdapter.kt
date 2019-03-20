@@ -31,6 +31,7 @@ class PostcardDBAdapter(_context: Context) {
         cv.put("front", front)
         cv.put("back", back)
         mSqliteDatabase?.insert("postcard", null, cv)
+        mSqliteDatabase?.close()
     }
 
     public fun selectAllPostcards(): ArrayList<Postcard>{
@@ -47,7 +48,7 @@ class PostcardDBAdapter(_context: Context) {
                 } while (cursor.moveToNext())
             }
         }
-
+        mSqliteDatabase?.close()
         return allPostcards
     }
 
