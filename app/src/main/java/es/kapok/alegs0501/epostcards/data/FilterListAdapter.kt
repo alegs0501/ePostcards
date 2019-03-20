@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import es.kapok.alegs0501.epostcards.CameraActivity
@@ -50,6 +51,9 @@ class FilterListAdapter(private val list:ArrayList<Filter>, private val context:
         fun bindItem(filter: es.kapok.alegs0501.epostcards.models.Filter, listener: OnItemClickListener){
             var name: TextView = itemView.findViewById(es.kapok.alegs0501.epostcards.R.id.filter_name)
             name.text = filter.name_filter
+
+            var image: ImageView = itemView.findViewById(es.kapok.alegs0501.epostcards.R.id.filter_image)
+            image.setImageBitmap(filter.image)
 
             itemView.setOnClickListener{
                 if (listener != null){

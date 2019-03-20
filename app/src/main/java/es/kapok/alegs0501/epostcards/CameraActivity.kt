@@ -3,6 +3,8 @@ package es.kapok.alegs0501.epostcards
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.hardware.Camera
 import android.net.Uri
 import android.opengl.Visibility
@@ -57,6 +59,8 @@ class CameraActivity : AppCompatActivity() {
     private var layoutManager: RecyclerView.LayoutManager? = null
 
 
+
+
     private val mPicture = Camera.PictureCallback { data, _ ->
         //this block was used to saved image on SD card
         /**val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
@@ -96,6 +100,30 @@ class CameraActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
+
+        //Filters list
+        val list: ArrayList<Filter> = arrayListOf(
+                Filter(Camera.Parameters.EFFECT_NONE, BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_none)),
+                Filter(Camera.Parameters.EFFECT_AQUA, BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_aqua)),
+                Filter(Camera.Parameters.EFFECT_BLACKBOARD, BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_blackboard)),
+                Filter(Camera.Parameters.EFFECT_MONO, BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_mono)),
+                Filter(Camera.Parameters.EFFECT_NEGATIVE, BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_negative)),
+                Filter(Camera.Parameters.EFFECT_POSTERIZE, BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_posterize)),
+                Filter(Camera.Parameters.EFFECT_WHITEBOARD, BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_whiteboard)),
+                Filter(Camera.Parameters.EFFECT_SEPIA, BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_sepia)),
+                Filter("nashville", BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_nashvile)),
+                Filter("hefe", BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_hefe)),
+                Filter("valencia", BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_valencia)),
+                Filter("xproll", BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_xproll)),
+                Filter("sierra", BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_sierra)),
+                Filter("walden", BitmapFactory.decodeResource(this.applicationContext.resources, R.drawable.filter_walden))
+
+
+
+
+
+
+        )
 
         //Hiding status bar
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -140,11 +168,11 @@ class CameraActivity : AppCompatActivity() {
            if (availableFilters.size > 0){
                for (i:Int in 0 until availableFilters.size){
                    //select index from filter
-                   val index = findFilter(AllFilters.list, availableFilters[i])
+                   val index = findFilter(list, availableFilters[i])
                    //if filter is available
                    if (index != -1 && findFilter(filterList!!, availableFilters[i]) == -1){
                        //add filter to use
-                       filterList?.add(AllFilters.list[index])
+                       filterList?.add(list[index])
                    }
                }
            }
