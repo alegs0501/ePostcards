@@ -12,6 +12,7 @@ import es.kapok.alegs0501.epostcards.dao.PostcardDBAdapter
 import es.kapok.alegs0501.epostcards.data.BackListAdapter
 import es.kapok.alegs0501.epostcards.data.PostcardListAdapter
 import es.kapok.alegs0501.epostcards.models.Postcard
+import es.kapok.alegs0501.epostcards.models.PostcardReference
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -48,7 +49,9 @@ class MainActivity : AppCompatActivity() {
         //Card view listener
         adapter!!.setOnclickListener(object: PostcardListAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                val intent = Intent(this@MainActivity, PreviewActivity::class.java)
+                val intent = Intent(this@MainActivity, ViewPostcardActivity::class.java)
+                PostcardReference.front = postcardList[position].front
+                PostcardReference.back = postcardList[position].back
                 startActivity(intent)
             }
         })

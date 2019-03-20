@@ -189,7 +189,8 @@ class EditBackActivity : AppCompatActivity() {
             mDBAdapter.insertPostcard(postcard.front, postcard.back)
 
             val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            startActivityIfNeeded(intent, 101)
+            this.finish()
         }
 
     }

@@ -30,6 +30,7 @@ class PreviewActivity : AppCompatActivity() {
         next_button.setOnClickListener{
             val intent = Intent(this, BackListActivity::class.java)
             startActivity(intent)
+            this.finish()
         }
 
     }
